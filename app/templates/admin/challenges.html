@@ -1,0 +1,33 @@
+{% extends "admin/_layout.html" %}
+{% block admin_title %}Challenges{% endblock %}
+{% block admin_content %}
+<p class="form-actions"><a class="btn btn--gold btn--sm" href="{{ url_for('admin.challenge_new') }}">New challenge</a></p>
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Title</th><th>Category</th><th>Difficulty</th><th>Points</th><th>File</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for c in challenges %}
+      <tr>
+        <td>{{ c.title }}</td>
+        <td>{{ c.category }}</td>
+        <td><span class="diff diff--{{ c.difficulty|lower }}">{{ c.difficulty }}</span></td>
+        <td>{{ c.points }}</td>
+        <td>{{ c.file_name or '—' }}</td>
+        <td><span class="badge {{ 'badge--ok' if c.is_visible else 'badge--bad' }}">{{ 'Visible' if c.is_visible else 'Hidden' }}</span></td>
+        <td class="row-actions">
+          <a class="btn btn--outline btn--sm" href="{{ url_for('admin.challenge_edit', challenge_id=c.id) }}">Edit</a>
+          <form method="post" action="{{ url_for('admin.challenge_visibility', challenge_id=c.id) }}" class="inline-form">
+            {{ form.csrf_token }}<button type="submit" class="btn btn--ghost btn--sm">{{ 'Hide' if c.is_visible else 'Publish' }}</button>
+          </form>
+          <form method="post" action="{{ url_for('admin.challenge_delete', challenge_id=c.id) }}" class="inline-form" data-confirm="Delete &quot;{{ c.title }}&quot;? Its solves and submissions are removed too.">
+            {{ form.csrf_token }}<button type="submit" class="btn btn--danger btn--sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="7" class="muted">No challenges yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

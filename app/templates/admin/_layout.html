@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+{% block title %}{% block admin_title %}Admin{% endblock %} · Admin · {{ app_name }}{% endblock %}
+{% block content %}
+{% set ep = request.endpoint or '' %}
+<section class="admin">
+  <div class="container">
+    <div class="admin__head">
+      <div>
+        <p class="eyebrow">Control room</p>
+        <h1 class="admin__title">{{ self.admin_title() }}</h1>
+      </div>
+    </div>
+    <div class="admin__grid">
+      <nav class="admin__side" aria-label="Admin">
+        <a href="{{ url_for('admin.index') }}" class="{{ 'is-active' if ep == 'admin.index' }}">Dashboard</a>
+        <a href="{{ url_for('admin.challenges') }}" class="{{ 'is-active' if ep.startswith('admin.challenge') }}">Challenges</a>
+        <a href="{{ url_for('admin.users') }}" class="{{ 'is-active' if ep in ('admin.users', 'admin.reset_password', 'admin.toggle_user') }}">Users</a>
+        <a href="{{ url_for('admin.bulk_create') }}" class="{{ 'is-active' if ep.startswith('admin.bulk') or ep.startswith('admin.credentials') }}">Bulk create</a>
+        <a href="{{ url_for('admin.submissions') }}" class="{{ 'is-active' if ep == 'admin.submissions' }}">Submissions</a>
+        <a href="{{ url_for('admin.audit_log') }}" class="{{ 'is-active' if ep == 'admin.audit_log' }}">Audit log</a>
+      </nav>
+      <div class="admin__main">{% block admin_content %}{% endblock %}</div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,23 @@
+:root {
+  --navy: #060B14;
+  --panel: #0F2035;
+  --panel-2: #0B1727;
+  --gold: #C9A44C;
+  --gold-hover: #E8C46F;
+  --cream: #F5EEE2;
+  --muted: #8FA3BF;
+  --line: rgba(143, 163, 191, 0.18);
+  --line-gold: rgba(201, 164, 76, 0.35);
+  --danger: #D96C6C;
+  --success: #6CC79A;
+
+  --font: "Inter", "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Montserrat", "Inter", system-ui, sans-serif;
+
+  --radius: 2px;
+  --nav-h: 76px;
+  --pad-x: clamp(20px, 3vw, 45px);
+  --container: 1400px;
+  --tracking: 0.18em;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}

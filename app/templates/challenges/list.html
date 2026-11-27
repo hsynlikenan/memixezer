@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Challenges · {{ app_name }}{% endblock %}
+{% block content %}
+<section class="page">
+  <div class="container">
+    <div class="page__head reveal">
+      <p class="eyebrow">The arena</p>
+      <h1 class="page__title">Challenges</h1>
+      <p class="muted">{{ solved|length }} of {{ challenges|length }} solved. Pick a card to read the brief and submit your flag.</p>
+    </div>
+
+    <form class="filters reveal reveal-d1" method="get" action="{{ url_for('challenges.index') }}" id="filters">
+      <label class="filters__group">Category
+        <select class="select" name="category" id="f-category">
+          <option value="">All categories</option>
+          {% for c in categories %}<option value="{{ c }}" {{ 'selected' if c == category }}>{{ c }}</option>{% endfor %}
+        </select>
+      </label>
+      <label class="filters__group">Difficulty
+        <select class="select" name="difficulty" id="f-difficulty">
+          <option value="">All difficulties</option>
+          {% for d in difficulties %}<option value="{{ d }}" {{ 'selected' if d == difficulty }}>{{ d }}</option>{% endfor %}
+        </select>
+      </label>
+      <noscript><button type="submit" class="btn btn--outline btn--sm">Apply</button></noscript>
+      <a class="filters__reset" href="{{ url_for('challenges.index') }}" id="f-reset">Reset</a>
+      <span class="filters__count" id="f-count" aria-live="polite"></span>
+    </form>
+
+    {% set ns = namespace(shown=0) %}
+    <div class="cards" id="cards">
+      {% for c in challenges %}
+        {% set match = (not category or c.category == category) and (not difficulty or c.difficulty == difficulty) %}
+        {% if match %}{% set ns.shown = ns.shown + 1 %}{% endif %}
+        <button type="button"
+                class="ch-card{{ ' is-solved' if c.id in solved }}{{ ' is-hidden-ch' if not c.is_visible }}{{ ' hidden' if not match }}"
+                data-id="{{ c.id }}" data-category="{{ c.category }}" data-difficulty="{{ c.difficulty }}"
+                data-detail-url="{{ url_for('challenges.detail', challenge_id=c.id) }}"
+                data-submit-url="{{ url_for('challenges.submit', challenge_id=c.id) }}"
+                data-file-url="{{ url_for('challenges.download', challenge_id=c.id) }}"
+                aria-haspopup="dialog">
+          <span class="ch-card__top">
+            <span class="ch-card__cat">{{ c.category }}</span>
+            <span class="diff diff--{{ c.difficulty|lower }}">{{ c.difficulty }}</span>
+          </span>
+          <span class="ch-card__title">{{ c.title }}</span>
+          <span class="ch-card__foot">
+            <span class="ch-card__pts">{{ c.points }} <small>pts</small></span>
+            {% if not c.is_visible %}<span class="badge-hidden">Hidden</span>{% endif %}
+          </span>
+        </button>
+      {% endfor %}
+    </div>
+    <p class="empty{{ '' if ns.shown == 0 else ' hidden' }}" id="cards-empty">
+      {% if challenges %}No challenges match these filters. <a href="{{ url_for('challenges.index') }}">Reset</a>{% else %}No challenges have been published yet. Check back soon.{% endif %}
+    </p>
+  </div>
+</section>
+
+<div class="modal" id="ch-modal" aria-hidden="true">
+  <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="m-title" tabindex="-1">
+    <button type="button" class="modal__close" data-close aria-label="Close">&times;</button>
+    <p class="modal__meta" id="m-meta"></p>
+    <h2 class="modal__title" id="m-title">Loading…</h2>
+    <div class="modal__desc" id="m-desc"></div>
+    <a class="modal__file btn btn--outline btn--sm" id="m-file" href="#" download hidden>Download file</a>
+    <form class="flag-form" id="m-form" novalidate>
+      <label for="m-flag" class="filters__group">Flag</label>
+      <input class="input" id="m-flag" name="flag" type="text" autocomplete="off" spellcheck="false" placeholder="flag{…}" maxlength="200" required>
+      <button type="submit" class="btn btn--gold">Submit flag</button>
+    </form>
+    <p class="flag-result" id="m-result" role="status" aria-live="polite"></p>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/challenges.js') }}" defer></script>{% endblock %}

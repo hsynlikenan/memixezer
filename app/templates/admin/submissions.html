@@ -1,0 +1,8 @@
+{% extends "admin/_layout.html" %}
+{% from "admin/_pager.html" import pager %}
+{% block admin_title %}Submissions{% endblock %}
+{% block admin_content %}
+{% set subs = page.items %}
+{% include "admin/_submissions_table.html" %}
+{{ pager(page, 'admin.submissions') }}
+{% endblock %}

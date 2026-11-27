@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}Log in · {{ app_name }}{% endblock %}
+{% block content %}
+<section class="auth">
+  <div class="panel reveal">
+    <p class="eyebrow">Welcome back</p>
+    <h1>Log in</h1>
+    <p class="muted">Use the credentials your organiser gave you.</p>
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {{ field(form.username, "username") }}
+      {{ field(form.password, "current-password") }}
+      <button type="submit" class="btn btn--gold">Log in</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

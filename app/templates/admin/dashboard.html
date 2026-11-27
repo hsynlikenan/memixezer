@@ -1,0 +1,28 @@
+{% extends "admin/_layout.html" %}
+{% block admin_title %}Dashboard{% endblock %}
+{% block admin_content %}
+<div class="kpis">
+  <div class="kpi"><div class="kpi__num" data-count="{{ kpis.players }}">{{ kpis.players }}</div><div class="kpi__label">Players</div></div>
+  <div class="kpi"><div class="kpi__num" data-count="{{ kpis.challenges }}">{{ kpis.challenges }}</div><div class="kpi__label">Challenges</div></div>
+  <div class="kpi"><div class="kpi__num" data-count="{{ kpis.solves }}">{{ kpis.solves }}</div><div class="kpi__label">Solves</div></div>
+  <div class="kpi"><div class="kpi__num" data-count="{{ kpis.submissions }}">{{ kpis.submissions }}</div><div class="kpi__label">Submissions</div></div>
+</div>
+
+<div class="admin-switches">
+  <form class="panel" method="post" action="{{ url_for('admin.toggle_scoreboard') }}" data-confirm="{{ 'Hide' if scoreboard_visible else 'Show' }} the scoreboard to players?">
+    {{ form.csrf_token }}
+    <div><strong>Scoreboard</strong><br><span class="badge {{ 'badge--ok' if scoreboard_visible else 'badge--bad' }}">{{ 'Visible' if scoreboard_visible else 'Hidden' }}</span></div>
+    <button type="submit" class="btn btn--outline btn--sm">{{ 'Hide' if scoreboard_visible else 'Show' }}</button>
+  </form>
+  <form class="panel" method="post" action="{{ url_for('admin.toggle_freeze') }}" data-confirm="{{ 'Unfreeze' if frozen else 'Freeze' }} the scoreboard?">
+    {{ form.csrf_token }}
+    <div><strong>Freeze</strong><br><span class="badge {{ 'badge--bad' if frozen else 'badge--ok' }}">{{ 'Frozen' if frozen else 'Live' }}</span></div>
+    <button type="submit" class="btn btn--outline btn--sm">{{ 'Unfreeze' if frozen else 'Freeze now' }}</button>
+  </form>
+</div>
+
+<h2 class="eyebrow">Recent submissions</h2>
+{% set subs = recent %}
+{% include "admin/_submissions_table.html" %}
+<p class="form-actions"><a class="btn btn--ghost btn--sm" href="{{ url_for('admin.submissions') }}">All submissions</a></p>
+{% endblock %}

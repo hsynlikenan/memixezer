@@ -1,0 +1,25 @@
+{% extends "admin/_layout.html" %}
+{% from "_macros.html" import field %}
+{% block admin_title %}{{ 'Edit challenge' if challenge else 'New challenge' }}{% endblock %}
+{% block admin_content %}
+<div class="panel">
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {{ form.hidden_tag() }}
+    {{ field(form.title) }}
+    <div class="form-grid">
+      {{ field(form.category) }}
+      {{ field(form.difficulty) }}
+      {{ field(form.points) }}
+    </div>
+    {{ field(form.description) }}
+    {{ field(form.flag, "off") }}
+    {{ field(form.file) }}
+    {% if challenge and challenge.file_name %}<p class="muted">Current file: <code>{{ challenge.file_name }}</code>. Upload a new one to replace it.</p>{% endif %}
+    <div class="field field--check">{{ form.is_visible() }} {{ form.is_visible.label }}</div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn--gold">{{ 'Save changes' if challenge else 'Create challenge' }}</button>
+      <a class="btn btn--ghost" href="{{ url_for('admin.challenges') }}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

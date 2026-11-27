@@ -1,0 +1,9 @@
+{% macro pager(page, endpoint) %}
+{% if page.pages > 1 %}
+<nav class="pagination" aria-label="Pagination">
+  {% if page.has_prev %}<a class="btn btn--outline btn--sm" href="{{ url_for(endpoint, page=page.prev_num) }}">&larr; Newer</a>{% endif %}
+  <span>Page {{ page.page }} of {{ page.pages }} · {{ page.total }} total</span>
+  {% if page.has_next %}<a class="btn btn--outline btn--sm" href="{{ url_for(endpoint, page=page.next_num) }}">Older &rarr;</a>{% endif %}
+</nav>
+{% endif %}
+{% endmacro %}

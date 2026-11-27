@@ -1,0 +1,34 @@
+{% extends "admin/_layout.html" %}
+{% block admin_title %}Users{% endblock %}
+{% block admin_content %}
+<p class="form-actions"><a class="btn btn--gold btn--sm" href="{{ url_for('admin.bulk_create') }}">Bulk create accounts</a></p>
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Username</th><th>Name</th><th>Role</th><th>Status</th><th>Last login (UTC)</th><th></th></tr></thead>
+    <tbody>
+    {% for u in users %}
+      <tr>
+        <td><code>{{ u.username }}</code></td>
+        <td>{{ u.display_name }}</td>
+        <td>{{ u.role }}</td>
+        <td>
+          <span class="badge {{ 'badge--ok' if u.is_enabled else 'badge--bad' }}">{{ 'Enabled' if u.is_enabled else 'Disabled' }}</span>
+          {% if u.must_change_password %}<span class="badge">Must change password</span>{% endif %}
+        </td>
+        <td>{{ u.last_login_at.strftime('%Y-%m-%d %H:%M') if u.last_login_at else 'never' }}</td>
+        <td class="row-actions">
+          {% if u.id != current_user.id %}
+          <form method="post" action="{{ url_for('admin.reset_password', user_id=u.id) }}" class="inline-form" data-confirm="Reset the password for {{ u.username }}?">
+            {{ form.csrf_token }}<button type="submit" class="btn btn--outline btn--sm">Reset password</button>
+          </form>
+          <form method="post" action="{{ url_for('admin.toggle_user', user_id=u.id) }}" class="inline-form" data-confirm="{{ 'Disable' if u.is_enabled else 'Enable' }} {{ u.username }}?">
+            {{ form.csrf_token }}<button type="submit" class="btn btn--sm {{ 'btn--danger' if u.is_enabled else 'btn--ghost' }}">{{ 'Disable' if u.is_enabled else 'Enable' }}</button>
+          </form>
+          {% else %}<span class="muted">You</span>{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

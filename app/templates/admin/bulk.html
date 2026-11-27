@@ -1,0 +1,16 @@
+{% extends "admin/_layout.html" %}
+{% from "_macros.html" import field %}
+{% block admin_title %}Bulk create accounts{% endblock %}
+{% block admin_content %}
+<div class="panel">
+  <p class="muted">One full name per line (max {{ max_users }}). Usernames and passwords are generated, and the credentials are shown only once.</p>
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {{ field(form.names) }}
+    <div class="form-actions">
+      <button type="submit" class="btn btn--gold">Create accounts</button>
+      <a class="btn btn--ghost" href="{{ url_for('admin.users') }}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

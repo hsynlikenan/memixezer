@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <div class="contours" aria-hidden="true">
+    <svg viewBox="0 0 800 700" preserveAspectRatio="xMaxYMax slice">
+      <path d="M0 700 C120 520 260 470 400 400 C560 320 640 200 800 40"/>
+      <path d="M180 700 C300 600 420 560 540 470 C660 380 720 280 800 200"/>
+      <path d="M360 700 C470 650 560 620 650 540 C720 480 770 420 800 370"/>
+    </svg>
+  </div>
+
+  <div class="container hero__inner">
+    <p class="eyebrow reveal">Web &middot; Crypto &middot; Forensics &middot; Linux &middot; Networking</p>
+    <h1 class="hero__title reveal reveal-d1">Find the flaw, <span class="accent">capture</span> the flag.</h1>
+    <p class="hero__lead reveal reveal-d2">{{ app_name }} is a capture-the-flag arena. Break into crafted challenges, recover hidden flags and climb the live scoreboard.</p>
+    <div class="hero__cta reveal reveal-d3">
+      <a href="{{ url_for('challenges.index') }}" class="btn btn--gold">Browse challenges</a>
+      {% if scoreboard_visible %}
+        <a href="{{ url_for('scoreboard.index') }}" class="btn btn--ghost">View scoreboard</a>
+      {% elif not (current_user.is_authenticated) %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn--ghost">Log in</a>
+      {% endif %}
+    </div>
+    <a href="#stats" class="scroll-hint">Scroll down</a>
+  </div>
+</section>
+
+<section class="stats" id="stats" aria-label="{{ app_name }} in numbers">
+  <div class="container stats__grid">
+    <div class="stat reveal"><div class="stat__num" data-count="{{ stats.players }}">{{ stats.players }}</div><div class="stat__label">Players</div></div>
+    <div class="stat reveal reveal-d1"><div class="stat__num" data-count="{{ stats.challenges }}">{{ stats.challenges }}</div><div class="stat__label">Challenges</div></div>
+    <div class="stat reveal reveal-d2"><div class="stat__num" data-count="{{ stats.points }}">{{ stats.points }}</div><div class="stat__label">Total points</div></div>
+    <div class="stat reveal reveal-d3"><div class="stat__num">6</div><div class="stat__label">Categories</div></div>
+  </div>
+</section>
+
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="eyebrow">How it works</p>
+      <h2 class="section__title">From first login to <span class="accent">first blood</span>.</h2>
+    </div>
+    <ol class="steps">
+      <li class="step reveal">
+        <span class="step__num">01</span>
+        <h3 class="step__title">Log in</h3>
+        <p>Use the credentials your organiser handed out, then set a password of your own.</p>
+      </li>
+      <li class="step reveal reveal-d1">
+        <span class="step__num">02</span>
+        <h3 class="step__title">Pick a challenge</h3>
+        <p>Filter by category and difficulty. Each card shows its points and whether you have solved it.</p>
+      </li>
+      <li class="step reveal reveal-d2">
+        <span class="step__num">03</span>
+        <h3 class="step__title">Capture the flag</h3>
+        <p>Download the attachment, dig in, and submit the flag you recover. Answers are checked instantly.</p>
+      </li>
+      <li class="step reveal reveal-d3">
+        <span class="step__num">04</span>
+        <h3 class="step__title">Climb the board</h3>
+        <p>Every solve adds points. Ties go to whoever got there first, and the scoreboard updates live.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+{% endblock %}

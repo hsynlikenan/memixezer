@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Scoreboard · {{ app_name }}{% endblock %}
+{% block content %}
+{% set mine = entries | selectattr('user_id', 'equalto', current_user.id) | list %}
+<section class="page">
+  <div class="container">
+    <div class="page__head reveal">
+      <p class="eyebrow">Live standings</p>
+      <h1 class="page__title">Scoreboard</h1>
+      <p class="sb-status">
+        <span class="live-dot{{ ' is-frozen' if frozen }}" id="sb-dot"></span>
+        <span id="sb-state">{% if frozen %}Frozen at {{ frozen.strftime('%Y-%m-%d %H:%M') }} UTC{% else %}Live · updates every 15 seconds{% endif %}</span>
+      </p>
+    </div>
+
+    <div class="sb-you reveal reveal-d1">
+      <div class="kpi-lite"><span class="kpi-lite__num" id="sb-you-score" data-count="{{ you }}">{{ you }}</span><span class="kpi-lite__label">Your points</span></div>
+      <div class="kpi-lite"><span class="kpi-lite__num" id="sb-you-rank">{{ '#' ~ mine[0].rank if mine else '—' }}</span><span class="kpi-lite__label">Your rank</span></div>
+      <div class="kpi-lite"><span class="kpi-lite__num" id="sb-players">{{ entries|length }}</span><span class="kpi-lite__label">Players on board</span></div>
+    </div>
+
+    <div class="sb-wrap reveal reveal-d2">
+      <table class="sb" id="sb" data-endpoint="{{ url_for('main.scoreboard') }}" data-me="{{ current_user.id }}">
+        <thead><tr><th class="num">#</th><th>Player</th><th class="num">Solves</th><th class="num">Score</th></tr></thead>
+        <tbody>
+        {% for e in entries %}
+          <tr data-user="{{ e.user_id }}" class="{{ 'rank--' ~ e.rank if e.rank <= 3 }}{{ ' is-you' if e.user_id == current_user.id }}">
+            <td class="num">{{ e.rank }}</td>
+            <td>{{ e.name }}</td>
+            <td class="num">{{ e.solves }}</td>
+            <td class="num score">{{ e.score }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="empty{{ ' hidden' if entries }}" id="sb-empty">No solves yet. Be the first to capture a flag.</p>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/scoreboard.js') }}" defer></script>{% endblock %}
